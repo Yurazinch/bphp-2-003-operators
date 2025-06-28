@@ -1,12 +1,12 @@
 <?php
 
-$fam = 'иванов';
-$name = 'петр';
-$otch = 'алексеевич';
+$argv;
 
-$args['Фамилия'] = $fam;
-$args['Имя'] = $name;
-$args['Отчество'] = $otch;
+$args = array_slice($argv, 1);
+
+print_r($args);
+
+$size = count($argv);
 
 $args_big = implode(" ", $args);
 
@@ -22,9 +22,17 @@ foreach($fio_arr as $arg) {
     $fio_set[] = mb_substr($arg, 0, 1, "UTF-8");  
 }
 
-$fio = $fio_set[0] . $fio_set[1] . $fio_set[2];
+$fio = implode('', $fio_set);
 
-$surnameAndInitials = $fio_arr[0] . " " . $fio_set[1] . ". " . $fio_set[2] . ".";
+if($size > 3) {
+    $fam = array_slice($fio_arr, 0, 2);
+    $inc = array_splice($fio_set, -2, 2);
+    $fam = implode(' ', $fam);
+    $inc = implode('. ', $inc);
+    $surnameAndInitials = "$fam $inc.";    
+} else {
+    $surnameAndInitials = $fio_arr[0] . " " . $fio_set[1] . ". " . $fio_set[2] . ".";
+}
 
 echo "Полное имя: '$fullName'" . PHP_EOL;
 echo "Фамилия и инициалы: '$surnameAndInitials'" . PHP_EOL;
