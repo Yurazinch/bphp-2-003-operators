@@ -1,20 +1,32 @@
 <?php
 
-$argv;
+$args = trim(fgets(STDIN));
 
-$args = array_slice($argv, 1);
-
-print_r($args);
-
-$size = count($argv);
-
-$args_big = implode(" ", $args);
-
-$fullName = mb_convert_case($args_big, MB_CASE_TITLE, "UTF-8");
+$fullName = mb_convert_case($args, MB_CASE_TITLE, "UTF-8");
 
 $fio_arr = [];
 
 $fio_arr= explode(" ", $fullName);
+
+$size = count($fio_arr);
+
+$check = [];
+
+foreach($fio_arr as $el) {
+    if((is_numeric(trim($el)) === true) ||
+    (is_bool(trim($el)) === true) ||
+    (is_null(trim($el)) === true)) {
+        $check[] = false;
+    } else {
+        $check[] = true;
+    }
+}
+
+if(in_array(false, $check, true)) {
+    fwrite(STDERR, "Фамилия, имя или отчество указаны неверно" . PHP_EOL);
+} elseif($size < 3) {
+    fwrite(STDERR, "Не указаны фамилия, имя или отчество" . PHP_EOL);
+} else {
 
 $fio_set = [];
 
@@ -34,6 +46,11 @@ if($size > 3) {
     $surnameAndInitials = $fio_arr[0] . " " . $fio_set[1] . ". " . $fio_set[2] . ".";
 }
 
-echo "Полное имя: '$fullName'" . PHP_EOL;
-echo "Фамилия и инициалы: '$surnameAndInitials'" . PHP_EOL;
-echo "Аббревиатура: '$fio'" . PHP_EOL;
+fwrite(STDOUT, "Полное имя: '$fullName'" . PHP_EOL);
+fwrite(STDOUT, "Фамилия и инициалы: '$surnameAndInitials'" . PHP_EOL);
+fwrite(STDOUT, "Аббревиатура: '$fio'" . PHP_EOL);
+fwrite(STDOUT, "Done" . PHP_EOL);
+
+}
+
+?>
